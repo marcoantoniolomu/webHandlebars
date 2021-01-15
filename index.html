@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+   <title> EJERCICIO 36 </title> 
+   <meta charset="utf-8" />
+   <!-- ENLACE a libreria de HANDLEBARS -->
+   <script src="lib/handlebars-v4.7.6.js"></script>
+   <!-- ENLACE a libreria de JQUERY -->
+   <script src="lib/jquery-3.5.1.js"></script>
+   <!-- ENLACE a external CSS -->
+   <link rel="stylesheet" href="css/styles.css">
+
+   <script type="text/javascript">
+        $(function() {
+            var stemplate = $("#address-template").html();
+            // 2- Compilo el Handlebars
+            var tmpl = Handlebars.compile(stemplate);
+            // 3- Defino el Objeto DATA ( JSON)
+            var xhr = $.ajax({
+                url: "json/superHeroes.json"                
+            });
+            // 3b- Termino de  Definir el Objeto DATA ( JSON)
+            xhr.done(function(data) {
+                var ctx = {};
+                ctx.superHeroes = data;
+                // 4- PASO nuestros datos a la página
+                var html = tmpl(ctx);
+                // Añado el html compilado a la página
+                $("#content-placeholder").append(html);
+            });
+        });
+
+        // HELPERs ( es como una función )
+        Handlebars.registerHelper('Negrita', function(value) {
+            if(value) {
+                return new Handlebars.SafeString("<b>"+value+"</b>");
+            } else 
+            return "NO existe ese valor en el JSON";
+        });
+
+        Handlebars.registerHelper('Cursiva', function(value) {
+            if(value) {
+                return new Handlebars.SafeString("<i>"+value+"</i>");
+            } else 
+            return "NO existe ese valor en el JSON";
+        });
+
+        Handlebars.registerHelper('Tachado', function(value) {
+            if(value) {
+                return new Handlebars.SafeString("<strike>"+value+"</strike>");
+            } else 
+            return "NO existe ese valor en el JSON";
+        });
+
+        Handlebars.registerHelper('Subrayado', function(value) {
+            if(value) {
+                return new Handlebars.SafeString("<u>"+value+"</u>");
+            } else 
+            return "NO existe ese valor en el JSON";
+        });
+
+    </script>
+
+</head>
+
+<body>
+   
+    <!-- Los datos se insertarán en su lugar correspondiente, reemplazando los corchetes por las propiedades del Objeto   -->
+   <script id="address-template" type="text/x-handlebars-template">
+      
+    <div>  
+                
+        {{#each superHeroes}} <br/>
+            <h2> GRUPO Super Herores: </h2>
+            Squad Name : {{squadName}} <br/> 
+            Home Town : {{homeTown}} <br/>
+            Formed : {{formed}} <br/>
+            Secret Base : {{secretBase}} <br/>
+            Active : {{active}} <br/>
+            <h3> Miembros y Poderes: </h3>
+            {{#each members}}
+                {{#if secretIdentity}}
+                    Name: {{Negrita name}} <br/>
+                    Age: {{Cursiva age}} <br/>
+                    Secret Identity: {{Tachado secretIdentity}}<br/>
+                    Poderes: {{Subrayado powers}} <br/>
+                {{/if}}
+                {{#unless fobias}}              
+                    Este superheroe no tiene fobias conocidas<br/><br/><br/>
+                {{/unless}} 
+            {{/each}}
+
+        {{/each}}       
+        <br/>
+        
+    </div>
+
+  </script>
+  
+  <br/><br/>
+    
+    <header><h1> EJERCICIO 36 </h1></header>
+    <nav> <a href="index.html">Index</a> &nbsp;&nbsp;&nbsp;&nbsp; <a href="index2.html">Index2</a></nav>
+
+    <!-- El nuevo contenido se mostrará aquí -->
+    <div id="content-placeholder"></div>
+  
+    <footer>
+        @Copyright 2021. <br/>
+        Webmaster Marco Lopez.
+    </footer>
+       
+
+</body>
+</html>
